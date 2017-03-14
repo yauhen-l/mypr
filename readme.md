@@ -3,13 +3,18 @@
 Checks status of pull requests on Bitbucket server.
 It is useful to quickly check status of your pull requests without surfing web interface.
 Colors for user status:
-GREEN - approved
-YELLOW - needs work
-CYAN - not approved
+
+- GREEN - approved
+- YELLOW - needs work
+- CYAN - not approved
 
 ## Installation
+Run:
+```
+github.com/yauhen-l/mypr
+```
 
-Build with go and  put binary to your PATH.
+Make sure `$GOPATH/bin` is in your `$PATH`.
 
 Create config, where `user` is your Bitbucket slug:
 ```
@@ -19,7 +24,7 @@ user: yauhen-l
 EOT
 ```
 
-Btw, you also can add `password: XXXX` section in config, but on your own risk.
+BTW, you also can add `password: XXXX` section in config, but on your own risk.
 
 ## Usage
 
