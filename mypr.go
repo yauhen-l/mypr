@@ -13,6 +13,7 @@ import (
 	"sync"
 	"syscall"
 
+	"github.com/tmc/keyring"
 	"github.com/yauhen-l/stash"
 	"golang.org/x/crypto/ssh/terminal"
 	"gopkg.in/yaml.v2"
@@ -28,9 +29,19 @@ func trace(msg string, args ...interface{}) {
 }
 
 var cfg struct {
-	URL      string
-	User     string
-	Password string
+	URL        string `yaml:"url"`
+	User       string `yaml:"user"`
+	Password   string `yaml:"password"`
+	UseKeyring bool   `yaml:"useKeyring"`
+}
+
+func askPassword(username string) string {
+	fmt.Printf("Enter Password(%s): ", username)
+	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(bytePassword)
 }
 
 func credentials(username, password string) (string, string) {
@@ -42,14 +53,29 @@ func credentials(username, password string) (string, string) {
 	}
 
 	if len(password) == 0 {
-		fmt.Printf("Enter Password(%s): ", username)
-		bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
-		if err != nil {
-			log.Fatal(err)
-		}
-		password = string(bytePassword)
+		var err error
 
-		fmt.Println("")
+		if cfg.UseKeyring {
+			password, err = keyring.Get(cfg.URL, username)
+			if err != nil {
+				fmt.Printf("Failed to get paswword from keyring due: %v\n", err)
+
+				password = askPassword(username)
+
+				fmt.Printf("\nDo you want to save password in kering(y/n)?")
+				answer, _ := reader.ReadString('\n')
+				if strings.HasPrefix(answer, "y") {
+					err = keyring.Set(cfg.URL, username, password)
+					if err != nil {
+						fmt.Printf("Failed to save password into keyring due: %v\n", err)
+					} else {
+						fmt.Println("Password was saved.")
+					}
+				}
+			}
+		} else {
+			password = askPassword(username)
+		}
 	}
 
 	return strings.TrimSpace(username), strings.TrimSpace(password)

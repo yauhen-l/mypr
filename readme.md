@@ -9,13 +9,20 @@ CYAN - not approved
 
 ## Installation
 
-Build with go and  put binary to your PATH.
+On Linux with gnome keyring:
+`go get -tags gnome_keyring github.com/yauhen-l/mypr`
+
+On macOS:
+`go get github.com/yauhen-l/mypr`
+
+Put binary to your PATH.
 
 Create config, where `user` is your Bitbucket slug:
 ```
 > cat <<EOT >> ~/.config/mypr.yaml
 url: "https://yourbitbucket.com"
 user: yauhen-l
+useKyring: true
 EOT
 ```
 
