@@ -3,19 +3,20 @@
 Checks status of pull requests on Bitbucket server.
 It is useful to quickly check status of your pull requests without surfing web interface.
 Colors for user status:
-GREEN - approved
-YELLOW - needs work
-CYAN - not approved
+
+- GREEN - approved
+- YELLOW - needs work
+- CYAN - not approved
 
 ## Installation
 
-On Linux with gnome keyring:
+On Linux with gnome keyring (you also need `libsecret-devel`, see https://github.com/tmc/keyring for details):
 `go get -tags gnome_keyring github.com/yauhen-l/mypr`
 
 On macOS:
 `go get github.com/yauhen-l/mypr`
 
-Put binary to your PATH.
+Make sure `$GOPATH/bin` is in your `$PATH`.
 
 Create config, where `user` is your Bitbucket slug:
 ```
@@ -26,7 +27,7 @@ useKyring: true
 EOT
 ```
 
-Btw, you also can add `password: XXXX` section in config, but on your own risk.
+BTW, you also can add `password: XXXX` section in config, but on your own risk.
 
 ## Usage
 
