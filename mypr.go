@@ -137,7 +137,12 @@ func main() {
 	}
 
 	for c := range commentsCh {
-		task, ok := info.Comments[c.TaskID]
+		taskKey := c.Title
+		if !strings.Contains(taskKey, c.TaskID) {
+			taskKey = c.TaskID + ": " + c.Title
+		}
+
+		task, ok := info.Comments[taskKey]
 		if !ok {
 			task = make(map[string]PR)
 		}
@@ -153,7 +158,7 @@ func main() {
 		}
 
 		task[c.Repository] = repo
-		info.Comments[c.TaskID] = task
+		info.Comments[taskKey] = task
 	}
 
 	info.Print()
